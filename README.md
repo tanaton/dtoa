@@ -1,4 +1,6 @@
 # dtoa
+[![Build Status](https://travis-ci.org/tanaton/dtoa.svg?branch=master)](https://travis-ci.org/tanaton/dtoa) [![GoDoc](https://godoc.org/github.com/tanaton/dtoa?status.svg)](https://godoc.org/github.com/tanaton/dtoa)
+
 本ライブラリは浮動小数点数値をバイト列に変換する高速関数を提供します。
 
 実装は[Milo Yip](https://github.com/miloyip)氏のC++実装[dtoa.h](https://github.com/miloyip/rapidjson/blob/master/include/rapidjson/internal/dtoa.h)をGoに移植したものとなっています。
