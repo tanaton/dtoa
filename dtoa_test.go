@@ -84,13 +84,15 @@ func TestDtoa(t *testing.T) {
 
 func BenchmarkStrconvAppendFloat1(b *testing.B) {
 	buf := []byte{}
+	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		strconv.AppendFloat(buf, 1.1, 'f', 5, 64)
+		strconv.AppendFloat(buf, 1.1, 'f', -1, 64)
 	}
 }
 func BenchmarkStrconvAppendFloat2(b *testing.B) {
 	buf := []byte{}
+	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		strconv.AppendFloat(buf, 3.1415926535, 'f', -1, 64)
@@ -98,6 +100,7 @@ func BenchmarkStrconvAppendFloat2(b *testing.B) {
 }
 func BenchmarkStrconvAppendFloat3(b *testing.B) {
 	buf := []byte{}
+	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		strconv.AppendFloat(buf, 2.225073858507201e-308, 'f', 1, 64)
@@ -106,20 +109,23 @@ func BenchmarkStrconvAppendFloat3(b *testing.B) {
 
 func BenchmarkDtoaDtoa1(b *testing.B) {
 	buf := []byte{}
+	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		Dtoa(buf, 1.1, 5)
+		Dtoa(buf, 1.1, -1)
 	}
 }
 func BenchmarkDtoaDtoa2(b *testing.B) {
 	buf := []byte{}
+	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		Dtoa(buf, 3.1415926535, 324)
+		Dtoa(buf, 3.1415926535, -1)
 	}
 }
 func BenchmarkDtoaDtoa3(b *testing.B) {
 	buf := []byte{}
+	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		Dtoa(buf, 2.225073858507201e-308, 1)

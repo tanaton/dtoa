@@ -199,6 +199,7 @@ func TestI64toa(t *testing.T) {
 
 func BenchmarkStrconvAppendInt1(b *testing.B) {
 	buf := []byte{}
+	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		strconv.AppendInt(buf, -42, 10)
@@ -206,6 +207,7 @@ func BenchmarkStrconvAppendInt1(b *testing.B) {
 }
 func BenchmarkStrconvAppendInt2(b *testing.B) {
 	buf := []byte{}
+	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		strconv.AppendInt(buf, math.MaxInt64, 10)
@@ -213,6 +215,7 @@ func BenchmarkStrconvAppendInt2(b *testing.B) {
 }
 func BenchmarkStrconvAppendInt3(b *testing.B) {
 	buf := []byte{}
+	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		strconv.AppendInt(buf, math.MinInt64, 10)
@@ -221,6 +224,7 @@ func BenchmarkStrconvAppendInt3(b *testing.B) {
 
 func BenchmarkDtoaI64toa1(b *testing.B) {
 	buf := []byte{}
+	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		I64toa(buf, -42)
@@ -228,6 +232,7 @@ func BenchmarkDtoaI64toa1(b *testing.B) {
 }
 func BenchmarkDtoaI64toa2(b *testing.B) {
 	buf := []byte{}
+	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		I64toa(buf, math.MaxInt64)
@@ -235,6 +240,7 @@ func BenchmarkDtoaI64toa2(b *testing.B) {
 }
 func BenchmarkDtoaI64toa3(b *testing.B) {
 	buf := []byte{}
+	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		I64toa(buf, math.MinInt64)
