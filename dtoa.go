@@ -32,7 +32,7 @@ func countDecimalDigit32(n uint32) int {
 
 func digitGen(buf []byte, W, Mp DiyFp, delta uint64, K int) ([]byte, int, int) {
 	base := len(buf)
-	one := NewDiyFp(uint64(1)<<uint64(-Mp.e), Mp.e)
+	one := DiyFp{uint64(1) << uint64(-Mp.e), Mp.e}
 	wp_w := Mp.Minus(W)
 	p1 := uint32(Mp.f >> uint64(-one.e))
 	var p2 uint64 = Mp.f & (one.f - 1)
@@ -106,9 +106,8 @@ func digitGen(buf []byte, W, Mp DiyFp, delta uint64, K int) ([]byte, int, int) {
 }
 
 func Grisu2(buf []byte, value float64) ([]byte, int, int) {
-	v := NewDiyFpDouble(value)
-	var w_m, w_p DiyFp
-	v.NormalizedBoundaries(&w_m, &w_p)
+	v := DiyFpDouble(value)
+	w_m, w_p := v.NormalizedBoundaries()
 
 	c_mk, K := GetCachedPower(w_p.e)
 	W := v.Normalize().Multiplication(c_mk)
@@ -221,6 +220,9 @@ func Dtoa(buf []byte, value float64, maxDecimalPlaces int) []byte {
 		if value < 0 {
 			buf = append(buf, '-')
 			value = -value
+		}
+		if maxDecimalPlaces < 0 {
+			maxDecimalPlaces = 324
 		}
 		var l, K int
 		buf, l, K = Grisu2(buf, value)

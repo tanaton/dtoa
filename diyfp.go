@@ -9,27 +9,19 @@ type DiyFp struct {
 	e int
 }
 
-func NewDiyFp(f uint64, e int) DiyFp {
-	return DiyFp{f: f, e: e}
-}
-func NewDiyFpDouble(d float64) DiyFp {
-	df := DiyFp{}
+func DiyFpDouble(d float64) DiyFp {
 	//u64 := *(*uint64)(unsafe.Pointer(&d))
 	u64 := math.Float64bits(d)
 
 	biased_e := int((u64 & kDpExponentMask) >> uint64(kDpSignificandSize))
 	significand := (u64 & kDpSignificandMask)
 	if biased_e != 0 {
-		df.f = significand + kDpHiddenBit
-		df.e = biased_e - kDpExponentBias
-	} else {
-		df.f = significand
-		df.e = kDpMinExponent + 1
+		return DiyFp{significand + kDpHiddenBit, biased_e - kDpExponentBias}
 	}
-	return df
+	return DiyFp{significand, kDpMinExponent + 1}
 }
 func (df DiyFp) Minus(rhs DiyFp) DiyFp {
-	return NewDiyFp(df.f-rhs.f, df.e)
+	return DiyFp{df.f - rhs.f, df.e}
 }
 func (df DiyFp) Multiplication(rhs DiyFp) DiyFp {
 	const M32 uint64 = 0xFFFFFFFF
@@ -43,7 +35,7 @@ func (df DiyFp) Multiplication(rhs DiyFp) DiyFp {
 	bd := b * d
 	tmp := (bd >> 32) + (ad & M32) + (bc & M32)
 	tmp += uint64(1) << 31 /// mult_round
-	return NewDiyFp(ac+(ad>>32)+(bc>>32)+(tmp>>32), df.e+rhs.e+64)
+	return DiyFp{ac + (ad >> 32) + (bc >> 32) + (tmp >> 32), df.e + rhs.e + 64}
 }
 func (df DiyFp) Normalize() DiyFp {
 	for (df.f & (uint64(1) << 63)) == 0 {
@@ -61,18 +53,17 @@ func (df DiyFp) NormalizeBoundary() DiyFp {
 	df.e = df.e - (kDiySignificandSize - kDpSignificandSize - 2)
 	return df
 }
-func (df DiyFp) NormalizedBoundaries(minus, plus *DiyFp) {
-	pl := NewDiyFp((df.f<<1)+1, df.e-1).NormalizeBoundary()
+func (df DiyFp) NormalizedBoundaries() (DiyFp, DiyFp) {
+	pl := DiyFp{(df.f << 1) + 1, df.e - 1}.NormalizeBoundary()
 	var mi DiyFp
 	if df.f == kDpHiddenBit {
-		mi = NewDiyFp((df.f<<2)-1, df.e-2)
+		mi = DiyFp{(df.f << 2) - 1, df.e - 2}
 	} else {
-		mi = NewDiyFp((df.f<<1)-1, df.e-1)
+		mi = DiyFp{(df.f << 1) - 1, df.e - 1}
 	}
 	mi.f <<= uint64(mi.e - pl.e)
 	mi.e = pl.e
-	*plus = pl
-	*minus = mi
+	return mi, pl
 }
 func (df DiyFp) ToDouble() float64 {
 	var be uint64
@@ -86,7 +77,7 @@ func (df DiyFp) ToDouble() float64 {
 }
 
 func GetCachedPowerByIndex(index uint) DiyFp {
-	return NewDiyFp(kCachedPowers_F[index], kCachedPowers_E[index])
+	return DiyFp{kCachedPowers_F[index], kCachedPowers_E[index]}
 }
 
 func GetCachedPower(e int) (DiyFp, int) {
