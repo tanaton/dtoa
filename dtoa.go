@@ -209,6 +209,15 @@ func Prettify(buf []byte, l, k, maxDecimalPlaces int) []byte {
 	}
 }
 
+func PrettifySimple(buf []byte, l, k, maxDecimalPlaces int) []byte {
+	buf = Prettify(buf, l, k, maxDecimalPlaces)
+	s := len(buf)
+	if s > 2 && buf[s-1] == '0' && buf[s-2] == '.' {
+		return buf[:s-2]
+	}
+	return buf
+}
+
 func Dtoa(buf []byte, value float64, maxDecimalPlaces int) []byte {
 	d := NewDouble(value)
 	if d.IsZero() {
@@ -227,5 +236,26 @@ func Dtoa(buf []byte, value float64, maxDecimalPlaces int) []byte {
 		var l, K int
 		buf, l, K = Grisu2(buf, value)
 		return Prettify(buf, l, K, maxDecimalPlaces)
+	}
+}
+
+func DtoaSimple(buf []byte, value float64, maxDecimalPlaces int) []byte {
+	d := NewDouble(value)
+	if d.IsZero() {
+		if d.Sign() {
+			buf = append(buf, '-')
+		}
+		return append(buf, '0')
+	} else {
+		if value < 0 {
+			buf = append(buf, '-')
+			value = -value
+		}
+		if maxDecimalPlaces < 0 {
+			maxDecimalPlaces = 324
+		}
+		var l, K int
+		buf, l, K = Grisu2(buf, value)
+		return PrettifySimple(buf, l, K, maxDecimalPlaces)
 	}
 }
