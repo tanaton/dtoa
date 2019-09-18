@@ -53,9 +53,9 @@ func TestDtoa(t *testing.T) {
 		{1, 0.0001, "0.0"},
 		{3, 1234567.8, "1234567.8"},
 		{3, 1e30, "1e30"},
-		{3, 5e-324, "0.0"},                                    // Min subnormal positive double
-		{3, 2.225073858507201e-308, "0.0"},                    // Max subnormal positive double
-		{3, 2.2250738585072014e-308, "0.0"},                   // Min normal positive double
+		{3, 5e-324, "0.0"},                  // Min subnormal positive double
+		{3, 2.225073858507201e-308, "0.0"},  // Max subnormal positive double
+		{3, 2.2250738585072014e-308, "0.0"}, // Min normal positive double
 		{3, 1.7976931348623157e308, "1.7976931348623157e308"}, // Max double
 		{5, -0.14000000000000001, "-0.14"},
 		{4, -0.14000000000000001, "-0.14"},
