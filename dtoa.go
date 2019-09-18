@@ -229,3 +229,20 @@ func Dtoa(buf []byte, value float64, maxDecimalPlaces int) []byte {
 		return Prettify(buf, l, K, maxDecimalPlaces)
 	}
 }
+
+func Dtoa2(buf []byte, value float64) []byte {
+	d := NewDouble(value)
+	if d.IsZero() {
+		if d.Sign() {
+			buf = append(buf, '-')
+		}
+		return append(buf, '0')
+	} else {
+		if value < 0 {
+			buf = append(buf, '-')
+			value = -value
+		}
+		buf, _, _ = Grisu2(buf, value)
+		return buf
+	}
+}
