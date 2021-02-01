@@ -100,6 +100,7 @@ var kPow10 = [...]uint64{
 	0,
 	0,
 }
+
 /*
 var cDigitsLut = [200]byte{
 	'0', '0', '0', '1', '0', '2', '0', '3', '0', '4', '0', '5', '0', '6', '0', '7', '0', '8', '0', '9',
@@ -129,7 +130,7 @@ func grow(buf []byte, s int) []byte {
 		if c > l+s-c {
 			buf = append(buf, buf[:l+s-c]...)
 		} else {
-			for i := l+s-c; i > 0; i-- {
+			for i := l + s - c; i > 0; i-- {
 				buf = append(buf, 0)
 			}
 		}
